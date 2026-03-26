@@ -169,7 +169,7 @@ export default function RiverMenu({ rivers, selectedRiver, onSelect, onLocate })
   })
 
   return (
-    <div className="h-screen flex flex-col" style={{ background: 'var(--ink)' }}>
+    <div className="h-screen flex flex-col overflow-hidden" style={{ background: 'var(--ink)' }}>
       {/* Background radial accents */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
         <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-10"
@@ -178,141 +178,144 @@ export default function RiverMenu({ rivers, selectedRiver, onSelect, onLocate })
           style={{ background: 'radial-gradient(circle, #EF4444 0%, transparent 70%)' }} />
       </div>
 
-      {/* ── Hero Header ──────────────────────────── */}
-      <section className="relative px-6 pt-12 pb-6 text-center flex-shrink-0">
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="flex items-center gap-2 mb-3 justify-center"
-        >
-          <div className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-          <span className="text-xs font-medium tracking-widest uppercase"
-            style={{ color: '#0EA5C9', fontFamily: 'var(--font-body)' }}>
-            Find your river
-          </span>
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', lineHeight: 1.15, color: 'var(--sand)' }}
-          className="mb-2 max-w-2xl mx-auto"
-        >
-          Check your<br />
-          <span style={{ color: '#0EA5C9' }}>river's health</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-center max-w-lg mx-auto"
-          style={{ color: 'var(--muted)', fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5 }}
-        >
-          50+ Indian rivers graded A to F. Find yours and explore its water quality.
-        </motion.p>
-      </section>
-
-      {/* ── Search & Filter (Sticky) ──────────────── */}
-      <section className="px-6 sticky top-0 z-20 flex-shrink-0" style={{ background: 'linear-gradient(to bottom, var(--ink), rgba(26,26,46,0.98))' }}>
-        <div className="max-w-4xl mx-auto w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="space-y-3 pt-2 pb-4"
-          >
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-4 top-3.5 text-white/30" size={18} />
-              <input 
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm focus:border-cyan-400/50 outline-none transition-colors"
-                placeholder="Search river name or state..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                style={{ fontFamily: 'var(--font-body)', color: 'var(--sand)' }}
-              />
-            </div>
-
-            {/* Filter buttons - collapsible dropdown */}
-            <motion.button
-              onClick={() => setShowFilters(!showFilters)}
-              className="w-full flex items-center justify-between py-2.5 px-4 rounded-lg font-medium text-sm transition-all"
-              style={{
-                background: showFilters ? 'rgba(14,165,201,0.2)' : 'rgba(255,255,255,0.05)',
-                border: showFilters ? '1px solid rgba(14,165,201,0.4)' : '1px solid rgba(255,255,255,0.1)',
-                color: showFilters ? '#0EA5C9' : 'var(--muted)',
-                fontFamily: 'var(--font-body)',
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <Filter size={16} />
-                <span>Filters & Sorting</span>
-              </div>
-              <motion.div
-                animate={{ rotate: showFilters ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ChevronDown size={16} />
-              </motion.div>
-            </motion.button>
-
-            {/* Collapsible filter options */}
-            <AnimatePresence>
-              {showFilters && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-2 overflow-hidden"
-                >
-                  {[
-                    { key: 'health', label: 'Health Grade' },
-                    { key: 'popularity', label: 'Popularity' },
-                    { key: 'drinkability', label: 'Drinkability' },
-                    { key: 'bathability', label: 'Bathability' },
-                    { key: 'untouched', label: 'Untouched' },
-                    { key: 'alpha', label: 'Alphabetical' }
-                  ].map(f => (
-                    <button 
-                      key={f.key}
-                      onClick={() => {
-                        setSortBy(f.key)
-                        setShowFilters(false)
-                      }}
-                      className="w-full py-2.5 px-4 rounded-lg font-medium text-sm transition-all text-left"
-                      style={{
-                        background: sortBy === f.key ? 'rgba(14,165,201,0.2)' : 'rgba(255,255,255,0.05)',
-                        border: sortBy === f.key ? '1px solid rgba(14,165,201,0.4)' : '1px solid rgba(255,255,255,0.1)',
-                        color: sortBy === f.key ? '#0EA5C9' : 'var(--muted)',
-                        fontFamily: 'var(--font-body)',
-                      }}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Advanced Table Grid (Scrollable) ──────── */}
-      <section className="flex-1 overflow-y-auto px-6" style={{ 
+      {/* ── Full scrollable page ──────────────────────── */}
+      <div className="flex-1 overflow-y-auto" style={{ 
         scrollBehavior: 'smooth',
         scrollbarWidth: 'none',
         msOverflowStyle: 'none'
       }}>
         <style>{`
-          section::-webkit-scrollbar {
+          div::-webkit-scrollbar {
             display: none;
           }
         `}</style>
-        <div className="max-w-4xl mx-auto w-full py-6">
+
+        {/* ── Hero Header ──────────────────────────── */}
+        <section className="relative px-6 pt-12 pb-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="flex items-center gap-2 mb-3 justify-center"
+          >
+            <div className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+            <span className="text-xs font-medium tracking-widest uppercase"
+              style={{ color: '#0EA5C9', fontFamily: 'var(--font-body)' }}>
+              Find your river
+            </span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            style={{ fontFamily: 'var(--font-head)', fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', lineHeight: 1.15, color: 'var(--sand)' }}
+            className="mb-2 max-w-2xl mx-auto"
+          >
+            Check your<br />
+            <span style={{ color: '#0EA5C9' }}>river's health</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-center max-w-lg mx-auto"
+            style={{ color: 'var(--muted)', fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5 }}
+          >
+            50+ Indian rivers graded A to F. Find yours and explore its water quality.
+          </motion.p>
+        </section>
+
+        <section className="px-6 pb-6" style={{ background: 'linear-gradient(to bottom, var(--ink), rgba(26,26,46,0.98))' }}>
+          <div className="max-w-4xl mx-auto w-full">
+            {/* ── Search & Filter ──────────────── */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="space-y-3 pb-2 mb-2"
+              style={{ background: 'var(--ink)' }}
+            >
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-4 top-3.5 text-white/30" size={18} />
+                <input 
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm focus:border-cyan-400/50 outline-none transition-colors"
+                  placeholder="Search river name or state..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  style={{ fontFamily: 'var(--font-body)', color: 'var(--sand)' }}
+                />
+              </div>
+
+              {/* Filter buttons - collapsible dropdown */}
+              <motion.button
+                onClick={() => setShowFilters(!showFilters)}
+                className="w-full flex items-center justify-between py-2.5 px-4 rounded-lg font-medium text-sm transition-all"
+                style={{
+                  background: showFilters ? 'rgba(14,165,201,0.2)' : 'rgba(255,255,255,0.05)',
+                  border: showFilters ? '1px solid rgba(14,165,201,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                  color: showFilters ? '#0EA5C9' : 'var(--muted)',
+                  fontFamily: 'var(--font-body)',
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <Filter size={16} />
+                  <span>Filters & Sorting</span>
+                </div>
+                <motion.div
+                  animate={{ rotate: showFilters ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ChevronDown size={16} />
+                </motion.div>
+              </motion.button>
+
+              {/* Collapsible filter options */}
+              <AnimatePresence>
+                {showFilters && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="space-y-2 overflow-hidden"
+                  >
+                    {[
+                      { key: 'health', label: 'Health Grade' },
+                      { key: 'popularity', label: 'Popularity' },
+                      { key: 'drinkability', label: 'Drinkability' },
+                      { key: 'bathability', label: 'Bathability' },
+                      { key: 'untouched', label: 'Untouched' },
+                      { key: 'alpha', label: 'Alphabetical' }
+                    ].map(f => (
+                      <button 
+                        key={f.key}
+                        onClick={() => {
+                          setSortBy(f.key)
+                          setShowFilters(false)
+                        }}
+                        className="w-full py-2.5 px-4 rounded-lg font-medium text-sm transition-all text-left"
+                        style={{
+                          background: sortBy === f.key ? 'rgba(14,165,201,0.2)' : 'rgba(255,255,255,0.05)',
+                          border: sortBy === f.key ? '1px solid rgba(14,165,201,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                          color: sortBy === f.key ? '#0EA5C9' : 'var(--muted)',
+                          fontFamily: 'var(--font-body)',
+                        }}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="px-6 py-6">
+          <div className="max-w-4xl mx-auto w-full">
           {filtered.length > 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
@@ -422,7 +425,8 @@ export default function RiverMenu({ rivers, selectedRiver, onSelect, onLocate })
             </div>
           )}
         </div>
-      </section>
+        </section>
+      </div>
 
       {/* ── Mini Map Preview Square (Floating) ──── */}
       {!mapExpanded && (
